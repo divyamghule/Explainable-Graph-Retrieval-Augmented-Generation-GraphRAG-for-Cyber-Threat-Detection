@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login | NovaTech Solutions</title>
+    <link rel="stylesheet" href="/static/css/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="container nav-wrap">
+        <div class="brand">NovaTech Solutions</div>
+        <nav>
+          <a href="/">Home</a>
+          <a href="/careers">Job Apply</a>
+          <a href="/careers/internships">Internships</a>
+        </nav>
+      </div>
+    </header>
+
+    <section class="section">
+      <div class="container" style="max-width: 560px">
+        <h1 class="page-title">Login</h1>
+        <p class="muted">Sign in to access company portal features.</p>
+
+        {% if message %}
+        <div class="alert {{ status }}">{{ message }}</div>
+        {% endif %}
+
+        <form action="/login" method="post" class="form-grid">
+          <label class="message-box">
+            Email
+            <input name="email" type="email" placeholder="admin@novatech.com" required />
+          </label>
+
+          <label class="message-box">
+            Password
+            <input name="password" type="password" placeholder="Enter password" required />
+          </label>
+
+          <button class="btn btn-primary" type="submit">Login</button>
+        </form>
+
+        <p class="muted" style="margin-top: 10px">Demo credentials: admin@novatech.com / Admin@123</p>
+      </div>
+    </section>
+  </body>
+</html>

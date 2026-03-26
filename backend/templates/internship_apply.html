@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Apply - {{ internship_name }} | NovaTech Solutions</title>
+    <link rel="stylesheet" href="/static/css/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="container nav-wrap">
+        <div class="brand">NovaTech Solutions</div>
+        <nav>
+          <a href="/">Home</a>
+          <a href="/careers">Job Apply</a>
+          <a href="/careers/internships">Internships</a>
+          <a href="/login">Login</a>
+        </nav>
+      </div>
+    </header>
+
+    <section class="section">
+      <div class="container">
+        <h1 class="page-title">Apply for {{ internship_name }} Internship</h1>
+        <p class="muted">Location: {{ internship_location }}</p>
+        <p class="muted">Fill the form below like a real company internship application.</p>
+
+        {% if message %}
+        <div class="alert {{ status }}">{{ message }}</div>
+        {% endif %}
+
+        <form action="/careers/internships/{{ internship_slug }}/apply" method="post" enctype="multipart/form-data" class="form-grid">
+          <label>
+            Full Name
+            <input name="full_name" type="text" required />
+          </label>
+          <label>
+            Email Address
+            <input name="email" type="email" required />
+          </label>
+          <label>
+            Phone Number
+            <input name="phone" type="tel" required />
+          </label>
+          <label>
+            College Name
+            <input name="college_name" type="text" required />
+          </label>
+          <label>
+            Graduation Year
+            <input name="graduation_year" type="text" placeholder="2026" required />
+          </label>
+          <label>
+            Skills
+            <input name="skills" type="text" placeholder="Python, SQL, HTML, CSS" required />
+          </label>
+          <label>
+            Resume (PDF only)
+            <input name="resume_file" type="file" accept="application/pdf,.pdf" required />
+          </label>
+          <label class="message-box">
+            Cover Letter
+            <textarea name="cover_letter" rows="6" required></textarea>
+          </label>
+
+          <button class="btn btn-primary" type="submit">Submit Application</button>
+        </form>
+      </div>
+    </section>
+  </body>
+</html>

@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NovaTech Solutions | Full-Stack IT Company</title>
+    <link rel="stylesheet" href="/static/css/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="container nav-wrap">
+        <div class="brand">NovaTech Solutions</div>
+        <nav>
+          <a href="#services">Services</a>
+          <a href="#projects">Projects</a>
+          <a href="#team">Team</a>
+          <a href="#contact">Contact</a>
+          <a href="/careers">Job Apply</a>
+          <a href="/login">Login</a>
+        </nav>
+      </div>
+    </header>
+
+    <section class="hero">
+      <div class="container hero-grid">
+        <div>
+          <p class="kicker">IT COMPANY • FULL-STACK DEVELOPMENT</p>
+          <h1>We Build Modern Digital Products for Growing Businesses</h1>
+          <p class="lead">
+            NovaTech Solutions is a full-service technology partner delivering web,
+            mobile, cloud, and AI-driven solutions with measurable business outcomes.
+          </p>
+          <div class="cta-row">
+            <a class="btn btn-primary" href="#contact">Start a Project</a>
+            <a class="btn btn-ghost" href="#services">Explore Services</a>
+          </div>
+        </div>
+        <div class="hero-card">
+          <h3>Why Choose Us</h3>
+          <ul>
+            <li>Experienced full-stack engineering team</li>
+            <li>Agile delivery with transparent milestones</li>
+            <li>Scalable architecture and clean code standards</li>
+            <li>Post-launch support and optimization</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="services" class="section">
+      <div class="container">
+        <h2>Our Services</h2>
+        <div class="cards-grid">
+          {% for service in services %}
+          <article class="card">
+            <span class="icon">{{ service.icon }}</span>
+            <h3>{{ service.title }}</h3>
+            <p>{{ service.description }}</p>
+          </article>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+
+    <section id="projects" class="section alt">
+      <div class="container">
+        <h2>Featured Projects</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Project</th>
+                <th>Domain</th>
+                <th>Tech Stack</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for project in projects %}
+              <tr>
+                <td>{{ project.name }}</td>
+                <td>{{ project.domain }}</td>
+                <td>{{ project.stack }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="team" class="section">
+      <div class="container">
+        <h2>Leadership Team</h2>
+        <div class="cards-grid team-grid">
+          {% for member in team %}
+          <article class="card team-card">
+            <h3>{{ member.name }}</h3>
+            <p class="muted">{{ member.role }}</p>
+            <p>{{ member.experience }}</p>
+          </article>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+
+    <section id="contact" class="section alt">
+      <div class="container">
+        <h2>Contact Us</h2>
+        <p class="muted">Tell us about your idea and we will get back to you quickly.</p>
+
+        {% if message %}
+        <div class="alert {{ status }}">{{ message }}</div>
+        {% endif %}
+
+        <form action="/contact" method="post" class="form-grid">
+          <label>
+            Full Name
+            <input name="full_name" type="text" required />
+          </label>
+          <label>
+            Email
+            <input name="email" type="email" required />
+          </label>
+          <label>
+            Phone
+            <input name="phone" type="tel" required />
+          </label>
+          <label>
+            Company
+            <input name="company" type="text" />
+          </label>
+          <label>
+            Service Interest
+            <select name="service_interest">
+              <option value="">Select Service</option>
+              {% for service in services %}
+              <option value="{{ service.title }}">{{ service.title }}</option>
+              {% endfor %}
+            </select>
+          </label>
+          <label class="message-box">
+            Message
+            <textarea name="message" rows="5" required></textarea>
+          </label>
+          <button class="btn btn-primary" type="submit">Submit Inquiry</button>
+        </form>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="container footer-wrap">
+        <p>© 2026 NovaTech Solutions. All rights reserved.</p>
+        <p>Built for college full-stack project demonstration.</p>
+      </div>
+    </footer>
+
+    <script src="/static/js/main.js"></script>
+  </body>
+</html>

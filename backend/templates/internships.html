@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Internships | NovaTech Solutions</title>
+    <link rel="stylesheet" href="/static/css/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="container nav-wrap">
+        <div class="brand">NovaTech Solutions</div>
+        <nav>
+          <a href="/">Home</a>
+          <a href="/careers">Job Apply</a>
+          <a href="/careers/jobs">Jobs</a>
+          <a href="/login">Login</a>
+        </nav>
+      </div>
+    </header>
+
+    <section class="section">
+      <div class="container">
+        <h1 class="page-title">Internships Available</h1>
+        <p class="muted">Select any internship to apply.</p>
+
+        {% if message %}
+        <div class="alert {{ status }}">{{ message }}</div>
+        {% endif %}
+
+        <div class="career-grid">
+          <article class="card">
+            <h3>Web Development</h3>
+            <p class="muted">Location: Mumbai</p>
+            <p>Frontend and backend development internship.</p>
+            <a class="btn btn-primary" href="/careers/internships/web-development/apply">Apply Now</a>
+          </article>
+
+          <article class="card">
+            <h3>Data Science</h3>
+            <p class="muted">Location: Mumbai</p>
+            <p>Data analytics, machine learning, and model building internship.</p>
+            <a class="btn btn-primary" href="/careers/internships/data-science/apply">Apply Now</a>
+          </article>
+
+          <article class="card">
+            <h3>Artificial Intelligence</h3>
+            <p class="muted">Location: Mumbai</p>
+            <p>AI workflows, NLP, and automation internship.</p>
+            <a class="btn btn-primary" href="/careers/internships/artificial-intelligence/apply">Apply Now</a>
+          </article>
+        </div>
+      </div>
+    </section>
+  </body>
+</html>
