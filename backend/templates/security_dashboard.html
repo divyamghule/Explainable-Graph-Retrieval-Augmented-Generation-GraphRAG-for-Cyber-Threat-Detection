@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security Intelligence Dashboard</title>
+    <link rel="stylesheet" href="/static/css/dashboard.css">
+</head>
+<body>
+    <main class="dashboard-shell">
+        <header class="dashboard-header">
+            <div>
+                <p class="eyebrow">Explainable GraphRAG Security Monitor</p>
+                <h1>Threat intelligence, in context.</h1>
+                <p class="subtitle">Neo4j graph activity with evidence-based Gemini explanations.</p>
+            </div>
+            <button id="refresh-button" class="refresh-button" type="button">Refresh data</button>
+        </header>
+
+        <div id="system-message" class="system-message" role="status"></div>
+
+        <section class="metrics-grid" aria-label="Security metrics">
+            <article class="metric-card"><span>Events</span><strong id="total-events">--</strong></article>
+            <article class="metric-card"><span>Threat events</span><strong id="threat-events">--</strong></article>
+            <article class="metric-card"><span>Source IPs</span><strong id="source-ips">--</strong></article>
+            <article class="metric-card"><span>Endpoints</span><strong id="endpoints">--</strong></article>
+        </section>
+
+        <section class="content-grid">
+            <article class="panel chart-panel">
+                <div class="panel-heading"><div><p class="eyebrow">Priority queue</p><h2>Most active sources</h2></div><span id="threshold-label" class="threshold-label"></span></div>
+                <div id="source-list" class="source-list"><p class="muted">Loading graph data...</p></div>
+            </article>
+            <article class="panel explanation-panel">
+                <div class="panel-heading"><div><p class="eyebrow">GraphRAG + Gemini</p><h2>Analyst explanation</h2></div></div>
+                <label for="source-ip-input">Source IP</label>
+                <div class="explain-controls"><input id="source-ip-input" type="text" placeholder="Select an IP from the list"><button id="explain-button" type="button">Explain threat</button></div>
+                <pre id="explanation" class="explanation-output">Select a source IP to generate an evidence-based explanation.</pre>
+            </article>
+        </section>
+
+        <section class="panel events-panel">
+            <div class="panel-heading"><div><p class="eyebrow">Live event stream</p><h2>Recent activity</h2></div></div>
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>Time</th><th>Source</th><th>Threat type</th><th>Path</th><th>Status</th></tr></thead>
+                    <tbody id="events-table"><tr><td colspan="5" class="muted">Loading events...</td></tr></tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+    <script>
+        const message = document.getElementById("system-message");
+        const sourceInput = document.getElementById("source-ip-input");
+        const explanation = document.getElementById("explanation");
+
+        function showError(text) {
+            message.textContent = text;
+            message.classList.add("visible");
+        }
+
+        function clearError() {
+            message.textContent = "";
+            message.classList.remove("visible");
+        }
+
+        async function loadDashboard() {
+            clearError();
+            try {
+                const [summaryResponse, eventsResponse] = await Promise.all([
+                    fetch("/api/security/summary"),
+                    fetch("/api/security/events")
+                ]);
+                const summary = await summaryResponse.json();
+                const events = await eventsResponse.json();
+                if (!summaryResponse.ok || !eventsResponse.ok) throw new Error(summary.error || events.error || "Neo4j is unavailable");
+                document.getElementById("total-events").textContent = summary.total_events;
+                document.getElementById("threat-events").textContent = summary.threat_events;
+                document.getElementById("source-ips").textContent = summary.source_ips;
+                document.getElementById("endpoints").textContent = summary.endpoints;
+                document.getElementById("threshold-label").textContent = `Threat threshold ${summary.threshold}`;
+                renderSources(summary.top_ips || []);
+                renderEvents(events.events || []);
+            } catch (error) {
+                showError(`${error.message}. Start Neo4j and configure NEO4J_PASSWORD.`);
+            }
+        }
+
+        function renderSources(sources) {
+            const target = document.getElementById("source-list");
+            if (!sources.length) { target.innerHTML = '<p class="muted">No threat events in Neo4j yet.</p>'; return; }
+            target.innerHTML = sources.map(source => `
+                <button class="source-row" type="button" data-ip="${escapeHtml(source.source_ip)}">
+                    <span><strong>${escapeHtml(source.source_ip)}</strong><small>Last seen ${escapeHtml(source.last_seen || "unknown")}</small></span>
+                    <b>${source.threats} events</b>
+                </button>`).join("");
+            target.querySelectorAll(".source-row").forEach(button => button.addEventListener("click", () => {
+                sourceInput.value = button.dataset.ip;
+                explainThreat();
+            }));
+        }
+
+        function renderEvents(events) {
+            const target = document.getElementById("events-table");
+            if (!events.length) { target.innerHTML = '<tr><td colspan="5" class="muted">No events in Neo4j yet.</td></tr>'; return; }
+            target.innerHTML = events.map(event => `<tr>
+                <td>${escapeHtml(event.timestamp || "")}</td><td>${escapeHtml(event.source_ip || "")}</td>
+                <td><span class="threat-tag ${event.threat_type === "Normal Activity" ? "normal" : "danger"}">${escapeHtml(event.threat_type || "")}</span></td>
+                <td>${escapeHtml(event.path || "")}</td><td>${escapeHtml(String(event.status_code || ""))}</td>
+            </tr>`).join("");
+        }
+
+        async function explainThreat() {
+            const sourceIp = sourceInput.value.trim();
+            if (!sourceIp) { explanation.textContent = "Enter or select a source IP first."; return; }
+            explanation.textContent = "Gemini is reviewing the Neo4j evidence...";
+            try {
+                const response = await fetch(`/api/security/explain/${encodeURIComponent(sourceIp)}`);
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.error || "Explanation unavailable");
+                explanation.textContent = data.explanation;
+            } catch (error) { explanation.textContent = error.message; }
+        }
+
+        function escapeHtml(value) {
+            return String(value).replace(/[&<>'"]/g, character => ({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;","\"":"&quot;"}[character]));
+        }
+
+        document.getElementById("refresh-button").addEventListener("click", loadDashboard);
+        document.getElementById("explain-button").addEventListener("click", explainThreat);
+        loadDashboard();
+    </script>
+</body>
+</html>
