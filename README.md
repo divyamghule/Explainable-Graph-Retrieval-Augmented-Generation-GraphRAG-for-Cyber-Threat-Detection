@@ -189,6 +189,22 @@ This is demonstration-only authentication and must not be used in production.
 
 ## Routes and APIs
 
+## output image 
+<img width="1023" height="210" alt="image" src="https://github.com/user-attachments/assets/5873feb7-08ef-41e5-b6c8-5a2adfd1c014" />
+<img width="1342" height="643" alt="image" src="https://github.com/user-attachments/assets/a740dc30-9f7b-4732-82b7-2b5fa75aa915" />
+<img width="874" height="496" alt="image" src="https://github.com/user-attachments/assets/00a70d0e-87a6-4536-8889-d80b74a21b8f" />
+<img width="1365" height="627" alt="image" src="https://github.com/user-attachments/assets/cb3adbf3-68db-40dd-98f9-196e9007f222" />
+<img width="1259" height="551" alt="image" src="https://github.com/user-attachments/assets/332483fa-0dfd-446e-aee5-ca32e4b7cb6c" />
+<img width="1332" height="331" alt="image" src="https://github.com/user-attachments/assets/112d9db5-2896-4a58-b15f-74c3e385d0e0" />
+<img width="614" height="629" alt="Screenshot 2026-10-24 125049" src="https://github.com/user-attachments/assets/6270f971-06cd-40cc-8f12-729f85f2de06" />
+
+
+
+
+
+
+
+
 ### Website routes
 
 - `GET /`
